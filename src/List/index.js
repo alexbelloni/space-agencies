@@ -5,7 +5,7 @@ import {
 } from './style';
 
 const List = ({ agencies, onDelete, onSelect }) => {
-    const MAX_NAME_LENGTH = 40;
+    //const MAX_NAME_LENGTH = 40;
     return (
         <Container>
             <h2>List of {agencies.length} agencies</h2>

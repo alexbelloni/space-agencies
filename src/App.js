@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Form from './Form';
+//import Form from './Form';
 import List from './List';
 
 require('dotenv').config()
 
 function App() {
   const [agencies, setAgencies] = useState([]);
-  const [selected, setSelected] = useState({});
+  const [, setSelected] = useState({});
 
   var agenciaDb;
   const getDb = () => {
@@ -47,58 +47,58 @@ function App() {
     }, function done(err) {
       if (err) { console.error(err); return; }
     });
-  }, [])
+  })
 
-  function create(agency) {
+  // function create(agency) {
 
-    getDb().create([
-      {
-        "fields": {
-          "name": agency.name,
-          "acronym": agency.acronym || '',
-          "country": agency.country,
-          "spaceappsPartner": agency.spaceappsPartner,
-          "url": agency.url || '',
-        }
-      }]
-      , function (err, records) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        records.forEach(function (record) {
-          console.log(record.get('name'));
-        });
-      });
+  //   getDb().create([
+  //     {
+  //       "fields": {
+  //         "name": agency.name,
+  //         "acronym": agency.acronym || '',
+  //         "country": agency.country,
+  //         "spaceappsPartner": agency.spaceappsPartner,
+  //         "url": agency.url || '',
+  //       }
+  //     }]
+  //     , function (err, records) {
+  //       if (err) {
+  //         console.error(err);
+  //         return;
+  //       }
+  //       records.forEach(function (record) {
+  //         console.log(record.get('name'));
+  //       });
+  //     });
 
-  }
+  // }
 
-  function update(agency) {
+  // function update(agency) {
 
-    getDb().update([
-      {
-        "id": agency.id,
-        "fields": {
-          "name": agency.name,
-          "acronym": agency.acronym,
-          "country": agency.country,
-          "spaceappsPartner": agency.spaceappsPartner,
-          "url": agency.url,
-        }
-      }
-    ], function (err, records) {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      records.forEach(function (record) {
-        console.log(record.get('name'));
-        agencies.splice(agencies.findIndex(a => a.id === agency.id), 1, agency)
-        setAgencies(agencies)
-      });
-    });
+  //   getDb().update([
+  //     {
+  //       "id": agency.id,
+  //       "fields": {
+  //         "name": agency.name,
+  //         "acronym": agency.acronym,
+  //         "country": agency.country,
+  //         "spaceappsPartner": agency.spaceappsPartner,
+  //         "url": agency.url,
+  //       }
+  //     }
+  //   ], function (err, records) {
+  //     if (err) {
+  //       console.error(err);
+  //       return;
+  //     }
+  //     records.forEach(function (record) {
+  //       console.log(record.get('name'));
+  //       agencies.splice(agencies.findIndex(a => a.id === agency.id), 1, agency)
+  //       setAgencies(agencies)
+  //     });
+  //   });
 
-  }
+  // }
 
   const handleSelect = agency => {
     setSelected(agency)
@@ -118,7 +118,7 @@ function App() {
   return (
     <div className="App">
       <h1>Space Agencies Catalog</h1>
-      <Form selected={selected} onSubmit={agency => update(agency)} />
+      {/* <Form selected={selected} onSubmit={agency => update(agency)} /> */}
       <List agencies={agencies} onDelete={handleDelete} onSelect={handleSelect} />
       <footer style={{textAlign: "center", padding: "10px 0"}}>
         Alexandre Alves . NASA Space Apps 2021 . The Power of Tenth
