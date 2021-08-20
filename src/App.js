@@ -9,9 +9,6 @@ function App() {
   const [allAgencies, setAllAgencies] = useState([]);
   const [agencies, setAgencies] = useState([]);
   const [selected, setSelected] = useState({});
-  const [searchText, setSearchText] = useState('');
-  const [searchTextRunning, setSearchTextRunning] = useState('');
-  const [searching, setSearching] = useState(false);
 
   var agenciaDb;
   const getDb = () => {
@@ -58,29 +55,6 @@ function App() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-
-  useEffect(() => {
-    function filterAgencies() {
-      const arr = allAgencies.filter(a => {
-        const text = searchText.toLowerCase();
-        return a.name.toLowerCase().includes(text) ||
-          (a.country && a.country.toLowerCase().includes(text)) ||
-          (a.acronym && a.acronym.toLowerCase().includes(text));
-      })
-
-      return arr.reduce((acc, curr) => acc.some(a => a.name === curr.name) ? acc : [...acc, curr], []);
-    }
-
-    if (!searching) {
-      setSearching(true);
-
-      const arr = filterAgencies();
-
-      setAgencies(arr)
-      setSearching(false);
-    }
-  }, [searchText])
 
   // function create(agency) {
 
@@ -147,13 +121,27 @@ function App() {
     });
   }
 
+  function filter(text) {
+    function filterAgencies() {
+      const arr = allAgencies.filter(a => {
+        const text2 = text.toLowerCase();
+        return a.name.toLowerCase().includes(text2) ||
+          (a.country && a.country.toLowerCase().includes(text2)) ||
+          (a.acronym && a.acronym.toLowerCase().includes(text2));
+      })
+
+      return arr.reduce((acc, curr) => acc.some(a => a.name === curr.name) ? acc : [...acc, curr], []);
+    }
+
+    const arr = filterAgencies(text);
+    setAgencies(arr);
+  }
+
   return (
     <div className="App">
       <h1>Space Agencies Catalog</h1>
       {process.env.NODE_ENV === 'development' && <Form selected={selected} onSubmit={agency => update(agency)} />}
-      <input type="text" placeholder="search" onChange={e => {
-        setSearchText(e.target.value);
-      }} />
+      <input type="text" placeholder="search" onChange={e => filter(e.target.value)} />
       <List agencies={agencies} onDelete={handleDelete} onSelect={handleSelect} />
       <footer style={{ textAlign: "center", padding: "10px 0" }}>
         Alexandre Alves . NASA Space Apps 2021 . The Power of Tenth
