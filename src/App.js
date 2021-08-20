@@ -2,6 +2,56 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Form from './Form';
 import List from './List';
+import externalImg from './assets/external.png';
+
+import styled from 'styled-components'
+const Container = styled.div`
+display: flex;
+flex-direction: column;
+padding: 0 10px;
+
+@media (min-width: 768px){
+  width: 700px
+}
+`
+const Input = styled.input`
+    width: 100%;
+    background-color: white;
+    color: black;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-style: italic;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+`
+
+const Footer = styled.div`
+  padding: 10px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: var(--white);
+    margin: 0 5px;
+
+    &:hover {
+      opacity: 79%
+    }
+
+    & > *{
+      margin: 0 5px;
+    }
+  }
+`
+
 
 require('dotenv').config()
 
@@ -141,11 +191,15 @@ function App() {
     <div className="App">
       <h1>Space Agencies Catalog</h1>
       {process.env.NODE_ENV === 'development' && <Form selected={selected} onSubmit={agency => update(agency)} />}
-      <input type="text" placeholder="search" onChange={e => filter(e.target.value)} />
+
+      <Container>
+        <Input type="text" placeholder="search for agency name, country or acronym" onChange={e => filter(e.target.value)} />
+      </Container>
       <List agencies={agencies} onDelete={handleDelete} onSelect={handleSelect} />
-      <footer style={{ textAlign: "center", padding: "10px 0" }}>
-        Alexandre Alves . NASA Space Apps 2021 . The Power of Tenth
-      </footer>
+      <Footer>
+        <a href="https://nasadatanauts.github.io/alexbelloni/" target="blank">Alex Belloni Alves <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} /></a> .
+        <a href="https://spaceappschallenge.org" target="blank">NASA Space Apps 2021 - The Power of Ten <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} /></a>
+      </Footer>
     </div>
   );
 }
