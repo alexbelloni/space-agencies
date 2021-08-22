@@ -3,6 +3,7 @@ import './App.css';
 import Form from './Form';
 import List from './List';
 import externalImg from './assets/external.png';
+import partnerImg from './assets/partner.png'
 
 import styled from 'styled-components'
 
@@ -32,7 +33,7 @@ const Input = styled.input`
     -moz-appearance: none;
     appearance: none;
 `
-const Checkbox=styled.input`
+const Checkbox = styled.input`
 background-color: initial;
 cursor: default;
 appearance: auto;
@@ -52,22 +53,38 @@ const Footer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 
-  & > a {
+ul {
+  list-style-type:none;
+  text-align: center;
+  padding: 0;
+}
+
+  li a {
+    text-decoration: none;
+    color: var(--white);
+
+    &:hover {
+      opacity: 69%
+    }
+  }
+
+  li a img {
+    margin-left: 5px;
+  }
+
+  @media (min-width: 768px){
+ul {
+  width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-decoration: none;
-    color: var(--white);
-    margin: 0 5px;
-
-    &:hover {
-      opacity: 79%
-    }
 
     & > *{
-      margin: 0 5px;
+      margin: 5px;
     }
+}
   }
 `
 
@@ -127,42 +144,45 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-useEffect(()=>{
-  setTextFilter('')
-  if(partnerFilter){
-    setAgencies(allAgencies.filter(a=>a.spaceappsPartner))
-  } else {
-    setAgencies(allAgencies)
+  useEffect(() => {
+    setTextFilter('')
+    if (partnerFilter) {
+      setAgencies(allAgencies.filter(a => a.spaceappsPartner))
+    } else {
+      setAgencies(allAgencies)
+    }
+
   }
-  
-}
-  ,[partnerFilter, allAgencies])
+    , [partnerFilter, allAgencies])
 
-  // function create(agency) {
+  function create(agency) {
 
-  //   getDb().create([
-  //     {
-  //       "fields": {
-  //         "name": agency.name,
-  //         "acronym": agency.acronym || '',
-  //         "country": agency.country,
-  //         "spaceappsPartner": agency.spaceappsPartner,
-  //         "url": agency.url || '',
-  //       }
-  //     }]
-  //     , function (err, records) {
-  //       if (err) {
-  //         console.error(err);
-  //         return;
-  //       }
-  //       records.forEach(function (record) {
-  //         console.log(record.get('name'));
-  //       });
-  //     });
+    getDb().create([
+      {
+        "fields": {
+          "name": agency.name,
+          "acronym": agency.acronym || '',
+          "country": agency.country,
+          "spaceappsPartner": agency.spaceappsPartner,
+          "url": agency.url || '',
+        }
+      }]
+      , function (err, records) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        records.forEach(function (record) {
+          console.log(record.get('name'));
+        });
+      });
 
-  // }
+  }
 
   function update(agency) {
+    if(!agency.id){
+      create(agency)
+    }
     getDb().update([
       {
         "id": agency.id,
@@ -228,13 +248,26 @@ useEffect(()=>{
       <Container>
         <Input type="text" placeholder="search for agency name, country or acronym" onChange={e => filter(e.target.value)} value={textFilter} />
       </Container>
-      <Container style={{display:"flex", flexDirection:"row", alignItems:"center", margin: "10px 0"}} >
-      <Checkbox type="checkbox" checked={partnerFilter} onChange={e=>setPartnerFilter(!partnerFilter)}/> <span onClick={e=>setPartnerFilter(!partnerFilter)}>Space Apps Patner</span>
+      <Container style={{ display: "flex", flexDirection: "row", alignItems: "center", margin: "10px 0" }} >
+        <Checkbox type="checkbox" checked={partnerFilter} onChange={e => setPartnerFilter(!partnerFilter)} /> <span onClick={e => setPartnerFilter(!partnerFilter)}> <img alt="partner logo" src={partnerImg} style={{ width: "17px", filter: "invert(1)" }} /> Space Apps Patner</span>
       </Container>
       <List agencies={agencies} onDelete={handleDelete} onSelect={handleSelect} />
       <Footer>
-        <a href="https://nasadatanauts.github.io/alexbelloni/" target="blank">Alex Belloni Alves <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} /></a> .
-        <a href="https://spaceappschallenge.org" target="blank">NASA Space Apps 2021 - The Power of Ten <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} /></a>
+        <ul>
+          <li>
+            <a href="https://nasadatanauts.github.io/alexbelloni/" target="blank">Alex Belloni Alves
+            <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} />
+            </a>
+          </li>
+          <li>
+            <a href="https://spaceappschallenge.org" target="blank">NASA Space Apps 2021
+              <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} />
+            </a>
+          </li>
+          {/* <li>
+            <span>The Power of Ten</span>
+          </li> */}
+        </ul>
       </Footer>
     </Main>
   );

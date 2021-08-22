@@ -1,14 +1,8 @@
 # Space Agencies Catalog
 
+<a href="https://space-agencies.vercel.app/">Website</a> in React to list info of space agencies worldwide.  
+Space agencies are government agencies engaged in activities related to outer space and space exploration.  
+More detail on my space <a href="https://nasadatanauts.github.io/alexbelloni/">blog</a>.  
 
-Wikipedia defines space agencies as. government agencies engaged in activities related to outer space and space exploration.
-
-https://www.nasa.gov/mission_pages/station/cooperation/index.html
-https://en.wikipedia.org/wiki/List_of_government_space_agencies
-https://www.unoosa.org/oosa/en/ourwork/space-agencies.html
-https://space.oscar.wmo.int/spaceagencies
-https://www.space-careers.com/agencies.html
-https://www.rankred.com/top-10-space-research-organisations-world/
-
-
+icons:  
 https://www.iconfinder.com/search?q=external&iconset=font-awesome
