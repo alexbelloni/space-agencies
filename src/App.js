@@ -5,6 +5,11 @@ import List from './List';
 import externalImg from './assets/external.png';
 
 import styled from 'styled-components'
+
+const Main = styled.div`
+
+`
+
 const Container = styled.div`
 display: flex;
 flex-direction: column;
@@ -27,7 +32,21 @@ const Input = styled.input`
     -moz-appearance: none;
     appearance: none;
 `
+const Checkbox=styled.input`
+background-color: initial;
+cursor: default;
+appearance: auto;
+box-sizing: border-box;
+margin: 3px 3px 3px 4px;
+padding: initial;
+border: initial;
 
+
+width: 25px;
+height: 20px;
+top: 2px;
+z-index: 2;
+margin-left: 0;`
 const Footer = styled.div`
   padding: 10px 0px;
   display: flex;
@@ -59,6 +78,8 @@ function App() {
   const [allAgencies, setAllAgencies] = useState([]);
   const [agencies, setAgencies] = useState([]);
   const [selected, setSelected] = useState({});
+  const [textFilter, setTextFilter] = useState('');
+  const [partnerFilter, setPartnerFilter] = useState(false);
 
   var agenciaDb;
   const getDb = () => {
@@ -105,6 +126,17 @@ function App() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+useEffect(()=>{
+  setTextFilter('')
+  if(partnerFilter){
+    setAgencies(allAgencies.filter(a=>a.spaceappsPartner))
+  } else {
+    setAgencies(allAgencies)
+  }
+  
+}
+  ,[partnerFilter])
 
   // function create(agency) {
 
@@ -183,24 +215,28 @@ function App() {
       return arr.reduce((acc, curr) => acc.some(a => a.name === curr.name) ? acc : [...acc, curr], []);
     }
 
+    setTextFilter(text)
     const arr = filterAgencies(text);
     setAgencies(arr);
   }
 
   return (
-    <div className="App">
+    <Main className="App">
       <h1>Space Agencies Catalog</h1>
       {process.env.NODE_ENV === 'development' && <Form selected={selected} onSubmit={agency => update(agency)} />}
 
       <Container>
-        <Input type="text" placeholder="search for agency name, country or acronym" onChange={e => filter(e.target.value)} />
+        <Input type="text" placeholder="search for agency name, country or acronym" onChange={e => filter(e.target.value)} value={textFilter} />
+      </Container>
+      <Container style={{display:"flex", flexDirection:"row", alignItems:"center", margin: "10px 0"}} >
+      <Checkbox type="checkbox" checked={partnerFilter} onChange={e=>setPartnerFilter(!partnerFilter)}/> <span onClick={e=>setPartnerFilter(!partnerFilter)}>Space Apps Patner</span>
       </Container>
       <List agencies={agencies} onDelete={handleDelete} onSelect={handleSelect} />
       <Footer>
         <a href="https://nasadatanauts.github.io/alexbelloni/" target="blank">Alex Belloni Alves <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} /></a> .
         <a href="https://spaceappschallenge.org" target="blank">NASA Space Apps 2021 - The Power of Ten <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} /></a>
       </Footer>
-    </div>
+    </Main>
   );
 }
 
