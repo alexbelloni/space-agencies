@@ -136,7 +136,7 @@ useEffect(()=>{
   }
   
 }
-  ,[partnerFilter])
+  ,[partnerFilter, allAgencies])
 
   // function create(agency) {
 
