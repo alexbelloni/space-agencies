@@ -51,13 +51,15 @@ margin-left: 0;`
 const Footer = styled.div`
   padding: 10px 0px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
 
 ul {
+  display: flex;
   list-style-type:none;
-  text-align: center;
+  justify-content: center;
   padding: 0;
 }
 
@@ -88,7 +90,6 @@ ul {
   }
 `
 
-
 require('dotenv').config()
 
 function App() {
@@ -97,6 +98,7 @@ function App() {
   const [selected, setSelected] = useState({});
   const [textFilter, setTextFilter] = useState('');
   const [partnerFilter, setPartnerFilter] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   var agenciaDb;
   const getDb = () => {
@@ -115,6 +117,8 @@ function App() {
   }
 
   useEffect(() => {
+    setLoading(true);
+
     getDb().select({
       // Selecting the first 3 records in Grid view:
       //maxRecords: 3,
@@ -124,10 +128,6 @@ function App() {
     }).eachPage(function page(records, fetchNextPage) {
       // This function (`page`) will get called for each page of records.
       const ags = records.map(r => { return { ...r.fields, id: r.id } });
-
-      //create json backup
-      //console.log(JSON.stringify(ags))
-      console.log('setAllAgencies')
 
       setAllAgencies(ags);
       setAgencies(ags);
@@ -139,6 +139,7 @@ function App() {
 
     }, function done(err) {
       if (err) { console.error(err); return; }
+      setLoading(false);
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -180,7 +181,7 @@ function App() {
   }
 
   function update(agency) {
-    if(!agency.id){
+    if (!agency.id) {
       create(agency)
     }
     getDb().update([
@@ -245,18 +246,27 @@ function App() {
       <h1>Space Agencies Catalog</h1>
       {process.env.NODE_ENV === 'development' && <Form selected={selected} onSubmit={agency => update(agency)} />}
 
-      <Container>
-        <Input type="text" placeholder="search for agency name, country or acronym" onChange={e => filter(e.target.value)} value={textFilter} />
-      </Container>
-      <Container style={{ display: "flex", flexDirection: "row", alignItems: "center", margin: "10px 0" }} >
-        <Checkbox type="checkbox" checked={partnerFilter} onChange={e => setPartnerFilter(!partnerFilter)} /> <span onClick={e => setPartnerFilter(!partnerFilter)}> <img alt="partner logo" src={partnerImg} style={{ width: "17px", filter: "invert(1)" }} /> Space Apps Patner</span>
-      </Container>
-      <List agencies={agencies} onDelete={handleDelete} onSelect={handleSelect} />
+      {!loading ? (
+        <>
+          <Container>
+            <Input type="text" placeholder="search for agency name, country or acronym" onChange={e => filter(e.target.value)} value={textFilter} />
+          </Container>
+          <Container style={{ display: "flex", flexDirection: "row", alignItems: "center", margin: "10px 0" }} >
+            <Checkbox type="checkbox" checked={partnerFilter} onChange={e => setPartnerFilter(!partnerFilter)} /> <span onClick={e => setPartnerFilter(!partnerFilter)}> <img alt="partner logo" src={partnerImg} style={{ width: "17px", filter: "invert(1)" }} /> Space Apps Partner</span>
+          </Container>
+          <List agencies={agencies} onDelete={handleDelete} onSelect={handleSelect} />
+        </>
+      ) :
+        'loading...'
+      }
+
+
       <Footer>
+        <p>Please note: this is not a Space Apps Challenge official website.</p>
         <ul>
           <li>
             <a href="https://nasadatanauts.github.io/alexbelloni/" target="blank">Alex Belloni Alves
-            <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} />
+              <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} />
             </a>
           </li>
           <li>
@@ -264,9 +274,6 @@ function App() {
               <img src={externalImg} alt="external link icon" style={{ width: "17px", filter: "invert(1)" }} />
             </a>
           </li>
-          {/* <li>
-            <span>The Power of Ten</span>
-          </li> */}
         </ul>
       </Footer>
     </Main>
